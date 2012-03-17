@@ -14,7 +14,7 @@ Ti.include('Login.js');
 Ti.include('FileList.js');
 Ti.include('Items.js');
 Ti.include('Recommendations.js');
-
+Ti.include('UserInput.js');
 
 /////////////////////////////////////////////////
 // Display

@@ -129,7 +129,7 @@ var Login = {
 		});
 		this.btnSave.addEventListener('click', function(){
 
-			var url = "http://www.imarketingb2b.com/login/process?f=/photos/authtoken";
+			var url = "https://www.imarketingb2b.com/login/process?f=/photos/authtoken";
 			
 			Login.httpClient.onload = function(){
 				Ti.API.info( "responseText: " + this.responseText );
@@ -144,7 +144,7 @@ var Login = {
         		
         		// Open Next Window
         		Login.hide();
-        		FileList.main();
+        		UserInput.main();
         		
 			};
 			
