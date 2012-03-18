@@ -4,6 +4,7 @@
 var FileList = {
 	isAddedToWin:false,
 	tableData:[],
+	fileTypeToShow:'all',
 	httpClient:Titanium.Network.createHTTPClient(),
 	search: search = Titanium.UI.createSearchBar({
 			showCancel:true,
@@ -42,7 +43,7 @@ var FileList = {
 
 		// Set Navigation Items
 		NavigationBar.titleName.text = 'Files';
-		NavigationBar.btnBack.action = 'none';
+		NavigationBar.btnBack.action = 'UserInput';
 	
 		if( this.isAddedToWin ){
 			// This objects element has already been added to the window.  You can just show it
@@ -85,7 +86,7 @@ var FileList = {
 	},
 	getData:function(){
 
-		var url = "https://www.algorithms.io/data/index";
+		var url = "https://www.algorithms.io/api/v1";
 		Ti.API.info( url );
 		
 		this.httpClient.onload = function(){
@@ -109,26 +110,48 @@ var FileList = {
 
 		results = eval('('+result+')');
 						
-		Ti.API.info( '# of rows: ' + results.length );
+		Ti.API.info( '# of rows: ' + results.data.length );
 								 
  		this.tableData = [];
  
  		// Load data into the array
-		for (var i=0;i<results.length;i++){
+		for (var i=0;i<results.data.length;i++){
 
-			// Loading the tableview this way is way faster than creating a rowview for each item
-			this.tableData.push( {title:results[i].friendly_name,hasChild:true,color:"black",id_seq:results[i].id_seq,number:i,font:{fontFamily:'Helvetica Neue',fontSize:30,fontWeight:'bold'}} );
+			// Perform a regex search on the type to show it or not
+			var re = new RegExp(this.fileTypeToShow, 'ig');
+			var str = results.data[i].type; 
+			var result = re.test(str);
+			//Titanium.API.info("result: " +  result);
+
+			if( result ){
+
+				// Loading the tableview this way is way faster than creating a rowview for each item
+				this.tableData.push( {title:results.data[i].friendly_name,color:"black",id_seq:results.data[i].id_seq,number:i,font:{fontFamily:'Helvetica Neue',fontSize:30,fontWeight:'bold'}} );
+			}
 		}
 		
 		this.tableview.data = this.tableData;
 		
 		this.tableview.addEventListener('click', function(e){
 		
-			FileList.hide();
+			// Perform a regex search on the type to show it or not
+			var re = new RegExp('Auto*', 'ig');
+			var str = FileList.fileTypeToShow; 
+			var result = re.test(str);
 			
-			Items.tableViewCurrentSelectedRow = e.row.number;
-			Items.datasource_id_seq = e.row.id_seq;
-			Items.main();
+			if( result ){
+				// Set the category file the user picked
+				UserInput.segmentFile_id_seq = e.row.id_seq;
+			}
+			if( FileList.fileTypeToShow == 'category' ){
+				// Set the category file the user picked
+				UserInput.categoryFile_id_seq = e.row.id_seq;
+			}
+			if( FileList.fileTypeToShow == 'application-mapping' ){
+				// Set the application-mapping file the user picked
+				UserInput.applicationFile_id_seq = e.row.id_seq;
+			}
+			
 		});
 	}
 };

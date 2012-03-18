@@ -132,7 +132,7 @@ var Login = {
 			var url = "https://www.imarketingb2b.com/login/process?f=/photos/authtoken";
 			
 			Login.httpClient.onload = function(){
-				Ti.API.info( "responseText: " + this.responseText );
+				//Ti.API.info( "responseText: " + this.responseText );
 				//Ti.API.info( "getResponseHeader: " + client.getResponseHeader( 'Set-Cookie' ) );
 				//Ti.API.info( "getResponseHeader: " + client.getResponseHeader( 'Cookie' ) );
 				//Ti.API.info( "getAllResponseHeaders: " + client.getAllResponseHeaders() );

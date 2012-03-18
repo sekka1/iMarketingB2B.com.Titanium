@@ -12,7 +12,7 @@ Ti.include('PlatformParameters.js');
 Ti.include('NavigationBar.js');
 Ti.include('Login.js');
 Ti.include('FileList.js');
-Ti.include('Items.js');
+Ti.include('RecWebView.js');
 Ti.include('Recommendations.js');
 Ti.include('UserInput.js');
 

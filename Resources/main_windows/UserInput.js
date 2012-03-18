@@ -4,6 +4,10 @@
 var UserInput = {
 	isAddedToWin:false,
 	tableData:[],
+	item:'',
+	segmentFile_id_seq:'',
+	applicationFile_id_seq:'',
+	categoryFile_id_seq:'',
 	httpClient:Titanium.Network.createHTTPClient(),
 	tableview:Titanium.UI.createTableView({
 			top:60,
@@ -22,17 +26,9 @@ var UserInput = {
 			message:'',
 			style:'BIG',
 	}),
-	labelPartNumber:Titanium.UI.createLabel({  
-        text:'Part #:', 
-        top:100,  
-        left:30,  
-        //width:300,
-        borderRadius:0,  
-        height:'auto'
-    }),
     textFieldPartNumber:Titanium.UI.createTextField({  
 		color:'#336699',  
-		top:135,  
+		top:70,  
 		left:30,  
 		width:250,  
 		height:40,  
@@ -41,28 +37,49 @@ var UserInput = {
 		returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,  
 		borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED  
     }),
-    myPic:Ti.UI.createPicker({
-  top:150
-}),
+    btnSegment:Titanium.UI.createButton({  
+		title:'Set Segment',  
+		top:130,  
+		left:30,
+		width:250,  
+		height:40,
+		borderRadius:1,  
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:14}
+	}),
+    btnCategory:Titanium.UI.createButton({  
+		title:'Set Category',  
+		top:200,  
+		left:30,
+		width:250,  
+		height:40,
+		borderRadius:1,  
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:14}
+	}),
+    btnApplication:Titanium.UI.createButton({  
+		title:'Set Application',  
+		top:265,  
+		left:30,
+		width:250,  
+		height:40,
+		borderRadius:1,  
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:14}
+	}),
+    btnGo:Titanium.UI.createButton({  
+		title:'Get Recommendation',  
+		top:330,  
+		left:30,
+		width:250,  
+		height:40,
+		borderRadius:1,  
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:14}
+	}),
 	main:function(){
 		
 		Ti.API.info( "In UserINput" );
 //		this.getData();
-//		this.show();
-	
-var data = [];
-data[0]=Ti.UI.createPickerRow({title:'Bananas',custom_item:'b'});
-data[1]=Ti.UI.createPickerRow({title:'Strawberries',custom_item:'s'});
-data[2]=Ti.UI.createPickerRow({title:'Mangos',custom_item:'m'});
-data[3]=Ti.UI.createPickerRow({title:'Grapes',custom_item:'g'});
+		this.show();
+		this.addEventListeners();
 
-var picker = Ti.UI.createPicker({
-  top:150
-});
-alert('hi');
-picker.add(data);
-win.add( picker );
-alert('hi');
 	},
 	show:function(){
 
@@ -77,7 +94,15 @@ alert('hi');
 			NavigationBar.show();
 		
 			//this.labelPartNumber.show();
+			this.btnSegment.show();
 			this.textFieldPartNumber.show();
+			this.btnCategory.show();
+			this.btnApplication.show();
+			this.btnGo.show();
+			
+			Ti.API.info( "segmentFile_id_seq: " + this.segmentFile_id_seq );
+			Ti.API.info( "applicationFile_id_seq: " + this.applicationFile_id_seq );
+			Ti.API.info( "categoryFile_id_seq: " + this.categoryFile_id_seq );
 			
 		} else {
 			// This object elements has not been added to the current window.  Add them.
@@ -88,64 +113,55 @@ alert('hi');
 			NavigationBar.show();
 			
 			//win.add( this.labelPartNumber );
+			win.add( this.btnSegment );
 			win.add( this.textFieldPartNumber );
+			win.add( this.btnCategory );
+			win.add( this.btnApplication );
+			win.add( this.btnGo );
 		}
 	},
 	hide:function(){
 	
 		NavigationBar.hide();
-		this.tableview.setData([]);
-		this.actInd.hide();
-		this.tableview.hide();
-		this.blankImage.hide();
-		this.search.blur();
+		this.btnSegment.hide();
+		this.textFieldPartNumber.hide();
+		this.btnCategory.hide();
+		this.btnApplication.hide();
+		this.btnGo.hide();
 	},
-	getData:function(){
-
-		var url = "https://www.algorithms.io/data/index";
-		Ti.API.info( url );
+	addEventListeners:function(){
+		// Add various event listener for this page
 		
-		this.httpClient.onload = function(){
-			Ti.API.info( "responseText: " + this.responseText );
+		this.btnSegment.addEventListener('click', function(){
+			// Goto Category Page
 			
-			//FileList.fillRows( this.responseText );
-			UserInput.actInd.hide();
-		};
+			this.hide();
+			FileList.fileTypeToShow = 'Auto*';
+			FileList.main();
 			
-		this.httpClient.open( "POST", url );
-		
-		var params = {
-			'class':'DataSources',
-			method:'files',
-			authToken:Login.authToken
-		};  
-
-        this.httpClient.send( params );
-	},
-	fillRows:function( result ){
-
-		results = eval('('+result+')');
-						
-		Ti.API.info( '# of rows: ' + results.length );
-								 
- 		this.tableData = [];
- 
- 		// Load data into the array
-		for (var i=0;i<results.length;i++){
-
-			// Loading the tableview this way is way faster than creating a rowview for each item
-			this.tableData.push( {title:results[i].friendly_name,hasChild:true,color:"black",id_seq:results[i].id_seq,number:i,font:{fontFamily:'Helvetica Neue',fontSize:30,fontWeight:'bold'}} );
-		}
-		
-		this.tableview.data = this.tableData;
-		
-		this.tableview.addEventListener('click', function(e){
-		
-			FileList.hide();
+		});	
+		this.btnCategory.addEventListener('click', function(){
+			// Goto Category Page
 			
-			Items.tableViewCurrentSelectedRow = e.row.number;
-			Items.datasource_id_seq = e.row.id_seq;
-			Items.main();
+			this.hide();
+			FileList.fileTypeToShow = 'category';
+			FileList.main();
+			
+		});
+		this.btnApplication.addEventListener('click', function(){
+			// Goto Application Page
+			
+			this.hide();
+			FileList.fileTypeToShow = 'application-mapping';
+			FileList.main();
+			
+		});
+		this.btnGo.addEventListener('click', function(){
+			// Goto Get Recommendation Page
+			
+			UserInput.item = UserInput.textFieldPartNumber.value;
+			this.hide();
+			RecWebView.main();
 		});
 	}
 };

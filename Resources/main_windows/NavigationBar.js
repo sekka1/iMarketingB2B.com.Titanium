@@ -72,12 +72,12 @@ var NavigationBar = {
 			Ti.API.info( '--Back Button Click: ' + e.source.action );
 
 			switch(e.source.action){
-				case 'Items':
-					Recommendations.hide();
-			  		Items.main();
-			  		break;
+			  	case 'UserInput':
+			  		FileList.hide();
+			  		RecWebView.hide();
+					UserInput.main();
+					break;
 			  	case 'FileList':
-			  		Items.hide();
 					FileList.main();
 					break;
 			}
