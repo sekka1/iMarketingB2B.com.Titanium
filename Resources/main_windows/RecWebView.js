@@ -4,7 +4,7 @@
 
 var RecWebView = {
 
-	DetailPageURL: 'http://www.imarketingb2b.com/photos2/recommendations?',
+	DetailPageURL: 'http://www.imarketingb2b.com/photos2/recommendations2?',
 	webview:Titanium.UI.createWebView({
 		top:60,
 		scalesPageToFit:false
